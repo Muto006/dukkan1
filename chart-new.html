@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhasebe Grafiği</title>
+    <link rel="stylesheet" href="style-new.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> Muhasebe Grafiği</h1>
+                <a href="index-new.html" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Ana Sayfaya Dön
+                </a>
+            </div>
+        </header>
+
+        <!-- Aylık Kar/Zarar Grafiği -->
+        <div class="chart-section">
+            <div class="section-header">
+                <h2>Aylık Kar/Zarar Çubuk Grafiği</h2>
+            </div>
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Özet Kartları -->
+        <div class="summary-cards">
+            <div class="card income">
+                <div class="card-icon">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Toplam Gelen</h3>
+                    <p id="totalIncome">₺0.00</p>
+                </div>
+            </div>
+            <div class="card expense">
+                <div class="card-icon">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Toplam Giden</h3>
+                    <p id="totalExpense">₺0.00</p>
+                </div>
+            </div>
+            <div class="card profit">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Toplam Kar</h3>
+                    <p id="totalProfit">₺0.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase Konfigürasyonu -->
+    <script type="module" src="firebase-config-new.js"></script>
+    
+    <!-- Firebase Servisi -->
+    <script type="module" src="firebase-service-new.js"></script>
+    
+    <!-- Grafik Uygulaması -->
+    <script src="chart-new.js"></script>
+</body>
+</html> 

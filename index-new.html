@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhasebe Sistemi</title>
+    <link rel="stylesheet" href="style-new.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calculator"></i> Muhasebe Sistemi</h1>
+        </header>
+
+        <!-- Özet Kartları -->
+        <div class="summary-cards">
+            <div class="card income">
+                <div class="card-icon">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Toplam Gelen</h3>
+                    <p id="totalIncome">₺0.00</p>
+                </div>
+            </div>
+            <div class="card expense">
+                <div class="card-icon">
+                    <i class="fas fa-arrow-down"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Toplam Giden</h3>
+                    <p id="totalExpense">₺0.00</p>
+                </div>
+            </div>
+            <div class="card profit">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Toplam Kar</h3>
+                    <p id="totalProfit">₺0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yeni Kayıt Formu -->
+        <div class="form-section">
+            <h2>Yeni Kayıt Ekle</h2>
+            <form id="transactionForm">
+                <div class="form-group">
+                    <label for="type">Tür:</label>
+                    <select id="type" required>
+                        <option value="income">Gelen</option>
+                        <option value="expense">Giden</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Tutar (₺):</label>
+                    <input type="number" id="amount" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Detay:</label>
+                    <input type="text" id="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">Tarih:</label>
+                    <input type="date" id="date" required>
+                </div>
+                <button type="submit" class="btn-add">
+                    <i class="fas fa-plus"></i> Kayıt Ekle
+                </button>
+            </form>
+        </div>
+
+        <!-- Düzenleme Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Kayıt Düzenle</h3>
+                    <button class="modal-close" onclick="muhasebe.closeEditModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="editType">Tür:</label>
+                        <select id="editType" required>
+                            <option value="income">Gelen</option>
+                            <option value="expense">Giden</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editAmount">Tutar (₺):</label>
+                        <input type="number" id="editAmount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Detay:</label>
+                        <input type="text" id="editDescription" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDate">Tarih:</label>
+                        <input type="date" id="editDate" required>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn-cancel" onclick="muhasebe.closeEditModal()">
+                            <i class="fas fa-times"></i> İptal
+                        </button>
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- İşlem Geçmişi -->
+        <div class="transactions-section">
+            <div class="section-header">
+                <h2>İşlem Geçmişi</h2>
+                <div class="export-import-buttons">
+                    <button onclick="muhasebe.exportData()" class="btn-export">
+                        <i class="fas fa-download"></i> Dışa Aktar
+                    </button>
+                    <button onclick="muhasebe.importData()" class="btn-import">
+                        <i class="fas fa-upload"></i> İçe Aktar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtreler -->
+            <div class="filters">
+                <select id="filterType">
+                    <option value="all">Tümü</option>
+                    <option value="income">Gelen</option>
+                    <option value="expense">Giden</option>
+                </select>
+                <select id="filterMonth">
+                    <option value="all">Tüm Aylar</option>
+                    <option value="0">Ocak</option>
+                    <option value="1">Şubat</option>
+                    <option value="2">Mart</option>
+                    <option value="3">Nisan</option>
+                    <option value="4">Mayıs</option>
+                    <option value="5">Haziran</option>
+                    <option value="6">Temmuz</option>
+                    <option value="7">Ağustos</option>
+                    <option value="8">Eylül</option>
+                    <option value="9">Ekim</option>
+                    <option value="10">Kasım</option>
+                    <option value="11">Aralık</option>
+                </select>
+                <input type="text" id="searchInput" placeholder="Detay ara...">
+            </div>
+
+            <!-- Tablo -->
+            <div class="table-container">
+                <table id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Tür</th>
+                            <th>Detay</th>
+                            <th>Tutar</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Grafik Butonu -->
+        <div class="chart-button-container">
+            <a href="chart-new.html" class="btn-chart-toggle">
+                <i class="fas fa-chart-line"></i> Grafik Görüntüle
+            </a>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase Konfigürasyonu -->
+    <script type="module" src="firebase-config-new.js"></script>
+    
+    <!-- Firebase Servisi -->
+    <script type="module" src="firebase-service-new.js"></script>
+    
+    <!-- Ana Uygulama -->
+    <script src="script-new.js"></script>
+</body>
+</html> 
